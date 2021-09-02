@@ -387,7 +387,7 @@ class ICL(data.Dataset):
         self.scaling_factor = 5000.0
 
     def __len__(self):
-        r"""Returns the length of the dataset. """
+        r"""Returns the length of the dataset."""
         return self.num_sequences
 
     def __getitem__(self, idx: int):

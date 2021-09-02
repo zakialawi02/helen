@@ -19,9 +19,10 @@ from ast import literal_eval
 _YAML_EXTS = {"", ".yml", ".yaml"}
 _PY_EXTS = {".py"}
 _VALID_TYPES = {tuple, list, str, int, float, bool}
-_FILE_TYPES = (io.IOBase)
+_FILE_TYPES = io.IOBase
 
 logger = logging.getLogger(__name__)
+
 
 class CfgNode(dict):
     r"""CfgNode is a `node` int the configureation `tree`. it simple wrapper around a `dict` and supports access to
@@ -36,7 +37,8 @@ class CfgNode(dict):
         self,
         init_dict: Optional[dict] = None,
         key_list: Optional[list] = None,
-        new_allowed: Optional[bool] = False):
+        new_allowed: Optional[bool] = False,
+    ):
         """
         Args:
             init_dict (dict): A dictionary to initialize the `CfgNode`.
@@ -72,10 +74,7 @@ class CfgNode(dict):
         self.__dict__[CfgNode.NEW_ALLOWED] = new_allowed
 
     @classmethod
-    def _create_config_tree_from_dict(
-        cls,
-        init_dict: dict,
-        key_list: list):
+    def _create_config_tree_from_dict(cls, init_dict: dict, key_list: list):
         """Create a configuration tree using the input dict. Any dict-like objects inside `init_dict` will be treated
         as new `CfgNode` objects.
         Args:
@@ -110,19 +109,17 @@ class CfgNode(dict):
             )
         _assert_with_logging(
             name not in self.__dict__,
-            "invalid attempt to omdify internatl cfgNoed state: {}".format(
-                name
-            )
+            "invalid attempt to omdify internatl cfgNoed state: {}".format(name),
         )
-        
+
         _assert_with_logging(
-            _valid_type(value, allow_cfg_node = True),
+            _valid_type(value, allow_cfg_node=True),
             "invalid type {} for key {}; valid types = {}".format(
                 type(value), name, _VALID_TYPES
             ),
         )
         self[name] = value
-    
+
     def __str__(self):
         def _indent(s_, num_spaces):
             s = s_.split("\n")
@@ -133,7 +130,7 @@ class CfgNode(dict):
             s = [(num_spaces * " ") + line for line in s]
             s = "\n".join(s)
             s = first + "\n" + s
-            
+
             return s
 
         r = ""
@@ -147,10 +144,12 @@ class CfgNode(dict):
         r += "\n".join(s)
         return r
 
+
 def _valid_type(value, allow_cfg_node: Optional[bool] = False):
-    return ( type(value) in _VALID_TYPES) or(
+    return (type(value) in _VALID_TYPES) or (
         allow_cfg_node and isinstance(value, CfgNode)
     )
+
 
 def _assert_with_logging(cond, msg):
     if not cond:
