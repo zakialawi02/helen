@@ -399,7 +399,7 @@ def relative_transformation(
     Example::
         >>> trans_01 = torch.eye(4)  # 4x4
         >>> trans_02 = torch.eye(4)  # 4x4
-        >>> trans_12 = gradslam.geometry.geometryutils.relative_transformation(trans_01, trans_02)  # 4x4
+        >>> trans_12 = clifter_slam.geometry.geometryutils.relative_transformation(trans_01, trans_02)  # 4x4
     """
     if not torch.is_tensor(trans_01):
         raise TypeError(
