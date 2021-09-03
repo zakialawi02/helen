@@ -48,8 +48,8 @@ class Scannet(data.Dataset):
         return_labels (bool): Determines whether to return segmentation labels. Default: True
     Examples::
         >>> dataset = Scannet(
-            basedir="ScanNet-gradSLAM/extractions/scans/",
-            seqmetadir="ScanNet-gradSLAM/extractions/sequence_associations/",
+            basedir="ScanNet-clifter_slam/extractions/scans/",
+            seqmetadir="ScanNet-clifter_slam/extractions/sequence_associations/",
             scenes=("scene0000_00", "scene0001_00")
             )
         >>> loader = data.DataLoader(dataset=dataset, batch_size=4)
