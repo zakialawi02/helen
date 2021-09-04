@@ -16,4 +16,4 @@ print(a)
 ```
 
 ## documentation
-[documentation](documentation/installation.md)
+[documentation](documentation/install.md)
