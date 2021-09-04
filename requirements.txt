@@ -1,2 +1,10 @@
+torch>=1.6.0
 PyYAML
+chamferdist==1.0.0
 kornia
+imageio
+natsort
+numpy
+plotly
+open3d==0.10.0.0
+opencv-python-headless
