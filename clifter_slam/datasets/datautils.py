@@ -2,6 +2,7 @@ import copy
 import warnings
 from collections import OrderedDict
 from typing import List, Union
+
 import numpy as np
 import torch
 
@@ -16,8 +17,7 @@ __all__ = [
 
 
 def normalize_image(rgb: Union[torch.Tensor, np.ndarray]):
-    """
-    Normalizes RGB image values from :math:`[0, 255]` range to :math:`[0, 1]` range.
+    r"""Normalizes RGB image values from :math:`[0, 255]` range to :math:`[0, 1]` range.
     Args:
         rgb (torch.Tensor or numpy.ndarray): RGB image in range :math:`[0, 255]`
     Returns:
@@ -31,31 +31,30 @@ def normalize_image(rgb: Union[torch.Tensor, np.ndarray]):
     elif isinstance(rgb, np.ndarray):
         return rgb.astype(float) / 255
     else:
-        raise TypeError("Unsupported input rgb type %r" % type(rgb))
+        raise TypeError("Unsupported input rgb type: %r" % type(rgb))
 
 
 def channels_first(rgb: Union[torch.Tensor, np.ndarray]):
-    """
-    Converts image from :math:`[0, 255]` range to :math:`[0, 1]`
+    r"""Converts from channels last representation :math:`(*, H, W, C)` to channels first representation
+    :math:`(*, C, H, W)`
     Args:
-        rgb (torch.Tensor or numpy.ndarray): RGB image in range :math:`[0, 255]`
+        rgb (torch.Tensor or numpy.ndarray): :math:`(*, H, W, C)` ordering `(*, height, width, channels)`
     Returns:
-        torch.Tensor or numpy.ndarray: RGB image in range :math:`[0, 1]`
+        torch.Tensor or numpy.ndarray: :math:`(*, C, H, W)` ordering
     Shape:
-        - rgb: :math:`(*, 3, H, W)` (any shape)
-        - Output: :math:`(*, H, W, 3)`
+        - rgb: :math:`(*, H, W, C)`
+        - Output: :math:`(*, C, H, W)`
     """
     if not (isinstance(rgb, np.ndarray) or torch.is_tensor(rgb)):
-        raise TypeError("unsupported input rgb type {}".format(type(rgb)))
+        raise TypeError("Unsupported input rgb type {}".format(type(rgb)))
 
     if rgb.ndim < 3:
         raise ValueError(
-            "input rgb must containt at least 3 dims, but had {} dims".format(rgb.ndim)
+            "Input rgb must contain atleast 3 dims, but had {} dims.".format(rgb.ndim)
         )
     if rgb.shape[-3] < rgb.shape[-1]:
         msg = "Are you sure that the input is correct? Number of channels exceeds height of image: %r > %r"
         warnings.warn(msg % (rgb.shape[-1], rgb.shape[-3]))
-
     ordering = list(range(rgb.ndim))
     ordering[-2], ordering[-1], ordering[-3] = ordering[-3], ordering[-2], ordering[-1]
 
@@ -70,8 +69,7 @@ def scale_intrinsics(
     h_ratio: Union[float, int],
     w_ratio: Union[float, int],
 ):
-
-    """Scales the intrinsics appropriately for resized frames where
+    r"""Scales the intrinsics appropriately for resized frames where
     :math:`h_\text{ratio} = h_\text{new} / h_\text{old}` and :math:`w_\text{ratio} = w_\text{new} / w_\text{old}`
     Args:
         intrinsics (numpy.ndarray or torch.Tensor): Intrinsics matrix of original frame
@@ -85,29 +83,27 @@ def scale_intrinsics(
         - intrinsics: :math:`(*, 3, 3)` or :math:`(*, 4, 4)`
         - Output: Matches `intrinsics` shape, :math:`(*, 3, 3)` or :math:`(*, 4, 4)`
     """
-
     if isinstance(intrinsics, np.ndarray):
         scaled_intrinsics = intrinsics.astype(np.float32).copy()
     elif torch.is_tensor(intrinsics):
         scaled_intrinsics = intrinsics.to(torch.float).clone()
     else:
-        raise TypeError("Unsupported input intrinsics type {}".foramt(type(intrinsics)))
+        raise TypeError("Unsupported input intrinsics type {}".format(type(intrinsics)))
     if not (intrinsics.shape[-2:] == (3, 3) or intrinsics.shape[-2:] == (4, 4)):
         raise ValueError(
-            "intrinsics must have shape (*, 3, 3) or (*, 4, 4) but had shape {} instead".format(
+            "intrinsics must have shape (*, 3, 3) or (*, 4, 4), but had shape {} instead".format(
                 intrinsics.shape
             )
         )
     if (intrinsics[..., -1, -1] != 1).any() or (intrinsics[..., 2, 2] != 1).any():
         warnings.warn(
-            "incorrect intrinsics: intrinsics[..., -1, -1] and intrinsics[..., 2, 2] should be 1"
+            "Incorrect intrinsics: intrinsics[..., -1, -1] and intrinsics[..., 2, 2] should be 1."
         )
 
-    scaled_intrinsics[..., 0, 0] *= w_ratio
-    scaled_intrinsics[..., 1, 1] *= h_ratio
-    scaled_intrinsics[..., 0, 2] *= w_ratio
-    scaled_intrinsics[..., 1, 2] *= h_ratio
-
+    scaled_intrinsics[..., 0, 0] *= w_ratio  # fx
+    scaled_intrinsics[..., 1, 1] *= h_ratio  # fy
+    scaled_intrinsics[..., 0, 2] *= w_ratio  # cx
+    scaled_intrinsics[..., 1, 2] *= h_ratio  # cy
     return scaled_intrinsics
 
 
@@ -203,7 +199,7 @@ def pointquaternion_to_homogeneous(
     return transform
 
 
-def poses_to_transform(poses: Union[np.ndarray, List[np.ndarray]]):
+def poses_to_transforms(poses: Union[np.ndarray, List[np.ndarray]]):
     r"""Converts poses to transformations w.r.t. the first frame in the sequence having identity pose
     Args:
         poses (numpy.ndarray or list of numpy.ndarray): Sequence of poses in `numpy.ndarray` format.
@@ -220,11 +216,11 @@ def poses_to_transform(poses: Union[np.ndarray, List[np.ndarray]]):
         if i == 0:
             transformations[i] = np.eye(4)
         else:
-            transformations[i] = np.linalg.inv(poses[i - 1].dot(poses[i]))
+            transformations[i] = np.linalg.inv(poses[i - 1]).dot(poses[i])
     return transformations
 
 
-def create_label_image(prediction: np.ndarray, color_pallete: OrderedDict):
+def create_label_image(prediction: np.ndarray, color_palette: OrderedDict):
     r"""Creates a label image, given a network prediction (each pixel contains class index) and a color palette.
     Args:
         prediction (numpy.ndarray): Predicted image where each pixel contains an integer,
@@ -241,6 +237,5 @@ def create_label_image(prediction: np.ndarray, color_pallete: OrderedDict):
         (prediction.shape[0], prediction.shape[1], 3), dtype=np.uint8
     )
     for idx, color in enumerate(color_palette):
-        label_image[predicition == idx] = color
-
-    return label_images
+        label_image[prediction == idx] = color
+    return label_image
