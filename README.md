@@ -14,3 +14,6 @@ import torch
 a = torch.rand(5,3)
 print(a)
 ```
+
+## documentation
+[documentation](documentation/installation.md)
