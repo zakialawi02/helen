@@ -17,6 +17,7 @@ __all__ = ["ICPSLAM"]
 
 class ICPSLAM(nn.Module):
     r"""ICP-SLAM for batched sequences of RGB-D images.
+
     Args:
         odom (str): Odometry method to be used from {'gt', 'icp', 'gradicp'}. Default: 'gradicp'
         dsratio (int): Downsampling ratio to apply to input frames before ICP. Only used if `odom` is
@@ -37,17 +38,22 @@ class ICPSLAM(nn.Module):
             Only used if `odom` is 'gradicp'.
         device (torch.device or str or None): The desired device of internal tensors. If None, sets device to be
             the CPU. Default: None
+
+
     Examples::
+
         >>> rgbdimages = RGBDImages(colors, depths, intrinsics, poses)
         >>> slam = ICPSLAM(odom='gt')
         >>> pointclouds, poses = slam(rgbdimages)
         >>> o3d.visualization.draw_geometries([pointclouds.o3d(0)])
+
         >>> rgbdimages = RGBDImages(colors, depths, intrinsics, poses)
         >>> slam = ICPSLAM(odom='gt')
         >>> pointclouds = Pointclouds()
         >>> pointclouds, new_poses = self.step(pointclouds, frames[:, 0], None)
         >>> frames.poses[:, :1] = new_poses
         >>> pointclouds, new_poses = self.step(pointclouds, frames[:, 1], frames[:, 0])
+
         >>> rgbdimages = RGBDImages(colors, depths, intrinsics, poses)
         >>> slam = ICPSLAM(odom='gradicp')
         >>> pointclouds = Pointclouds()
@@ -93,12 +99,16 @@ class ICPSLAM(nn.Module):
     def forward(self, frames: RGBDImages):
         r"""Builds global map pointclouds from a batch of input RGBDImages with a batch size
         of :math:`B` and sequence length of :math:`L`.
+
         Args:
             frames (clifter_slam.RGBDImages): Input batch of frames with a sequence length of `L`.
+
         Returns:
             tuple: tuple containing:
+
             - pointclouds (clifter_slam.Pointclouds): Pointclouds object containing :math:`B` global maps
             - poses (torch.Tensor): Poses computed by the odometry method
+
         Shape:
             - poses: :math:`(B, L, 4, 4)`
         """
@@ -138,6 +148,7 @@ class ICPSLAM(nn.Module):
         If `prev_frame` is not None, computes the relative transformation between `live_frame`
         and `prev_frame` using the selected odometry provider. If `prev_frame` is None,
         use the pose from `live_frame`.
+
         Args:
             pointclouds (clifter_slam.Pointclouds): Input batch of pointcloud global maps
             live_frame (clifter_slam.RGBDImages): Input batch of live frames (at time step :math:`t`). Must have sequence
@@ -146,10 +157,13 @@ class ICPSLAM(nn.Module):
                 Must have sequence length of 1. If None, will (skip calling odometry provider and) use the pose
                 from `live_frame`. Default: None
             inplace (bool): Can optionally update the pointclouds and live_frame poses in-place. Default: False
+
         Returns:
             tuple: tuple containing:
+
             - pointclouds (clifter_slam.Pointclouds): Updated :math:`B` global maps
             - poses (torch.Tensor): Poses for the live_frame batch
+
         Shape:
             - poses: :math:`(B, 1, 4, 4)`
         """
@@ -169,6 +183,7 @@ class ICPSLAM(nn.Module):
         r"""Compute the poses for `live_frame`. If `prev_frame` is not None, computes the relative
         transformation between `live_frame` and `prev_frame` using the selected odometry provider.
         If `prev_frame` is None, use the pose from `live_frame`.
+
         Args:
             pointclouds (clifter_slam.Pointclouds): Input batch of pointcloud global maps
             live_frame (clifter_slam.RGBDImages): Input batch of live frames (at time step :math:`t`). Must have sequence
@@ -176,8 +191,10 @@ class ICPSLAM(nn.Module):
             prev_frame (clifter_slam.RGBDImages or None): Input batch of previous frames (at time step :math:`t-1`).
                 Must have sequence length of 1. If None, will (skip calling odometry provider and) use the pose
                 from `live_frame`. Default: None
+
         Returns:
             torch.Tensor: Poses for the live_frame batch
+
         Shape:
             - Output: :math:`(B, 1, 4, 4)`
         """
@@ -233,12 +250,15 @@ class ICPSLAM(nn.Module):
         self, pointclouds: Pointclouds, live_frame: RGBDImages, inplace: bool = False
     ):
         r"""Updates global map pointclouds by aggregating them with points from `live_frame`.
+
         Args:
             pointclouds (clifter_slam.Pointclouds): Input batch of pointcloud global maps
             live_frame (clifter_slam.RGBDImages): Input batch of live frames (at time step :math:`t`). Must have sequence
                 length of 1.
             inplace (bool): Can optionally update the pointclouds in-place. Default: False
+
         Returns:
             clifter_slam.Pointclouds: Updated :math:`B` global maps
+
         """
         return update_map_aggregate(pointclouds, live_frame, inplace)

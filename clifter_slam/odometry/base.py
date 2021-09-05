@@ -5,6 +5,7 @@ __all__ = ["OdometryProvider"]
 
 class OdometryProvider(ABC):
     r"""Base class for all odometry providers.
+
     Your providers should also subclass this class. You should override the `provide()` method.
     """
 
@@ -14,5 +15,5 @@ class OdometryProvider(ABC):
 
     @abstractmethod
     def provide(self, *args, **kwargs):
-        r"""Defines the odometry computation performed at every `.provide()` call."""
+        r"""Defines the odometry computation performed at every `.provide()` call. """
         raise NotImplementedError

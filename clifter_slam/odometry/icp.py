@@ -21,11 +21,13 @@ class ICPOdometryProvider(OdometryProvider):
         dist_thresh: Union[float, int, None] = None,
     ):
         r"""Initializes internal ICPOdometryProvider state.
+
         Args:
             numiters (int): Number of iterations to run the optimization for. Default: 20
             damp (float or torch.Tensor): Damping coefficient for nonlinear least-squares. Default: 1e-8
             dist_thresh (float or int or None): Distance threshold for removing `src_pc` points distant from `tgt_pc`.
                 Default: None
+
         """
         self.numiters = numiters
         self.damp = damp
@@ -38,15 +40,19 @@ class ICPOdometryProvider(OdometryProvider):
     ) -> torch.Tensor:
         r"""Uses ICP to compute the relative homogenous transformation that, when applied to `frames_pointclouds`,
         would cause the points to align with points of `maps_pointclouds`.
+
         Args:
             maps_pointclouds (clifter_slam.Pointclouds): Object containing batch of map pointclouds of batch size
                 :math:`(B)`
             frames_pointclouds (clifter_slam.Pointclouds): Object containing batch of live frame pointclouds of batch size
                 :math:`(B)`
+
         Returns:
             torch.Tensor: The relative transformation that would align `maps_pointclouds` with `frames_pointclouds`
+
         Shape:
             - Output: :math:`(B, 1, 4, 4)`
+
         """
         if not isinstance(maps_pointclouds, Pointclouds):
             raise TypeError(

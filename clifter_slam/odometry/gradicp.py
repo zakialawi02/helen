@@ -12,12 +12,14 @@ __all__ = ["GradICPOdometryProvider"]
 class GradICPOdometryProvider(OdometryProvider):
     r"""An odometry provider that uses the (differentiable) gradICP technique presented in the clifter_slam paper.
     Computes the relative transformation between a pair of `clifter_slam.Pointclouds` objects using GradICP which
-    uses clifterLM (:math:`\nabla LM`) solver (See clifterLM section of 
-    `the clifter_slam paper <clifter_slampaper.pdf>`__). The iterate and damping coefficient are updated by:
+    uses gradLM (:math:`\nabla LM`) solver (See gradLM section of 
+    `the clifter_slam paper <https://arxiv.org/abs/1910.10672>`__). The iterate and damping coefficient are updated by:
+
     .. math::
         lambda_1 = Q_\lambda(r_0, r_1) & = \lambda_{min} + \frac{\lambda_{max} -
         \lambda_{min}}{1 + e^{-B (r_1 - r_0)}} \\
         Q_x(r_0, r_1) & = x_0 + \frac{\delta x_0}{\sqrt[nu]{1 + e^{-B2*(r_1 - r_0)}}}`
+
     """
 
     def __init__(
@@ -31,6 +33,7 @@ class GradICPOdometryProvider(OdometryProvider):
         nu: Union[float, int] = 200.0,
     ):
         r"""Initializes internal GradICPOdometryProvider state.
+
         Args:
             numiters (int): Number of iterations to run the optimization for. Default: 20
             damp (float or torch.Tensor): Damping coefficient for nonlinear least-squares. Default: 1e-8
@@ -38,9 +41,10 @@ class GradICPOdometryProvider(OdometryProvider):
                 Default: None
             lambda_max (float or int): Maximum value the damping function can assume (`lambda_min` will be
                 :math:`\frac{1}{\text{lambda_max}}`)
-            B (float or int): clifterLM falloff control parameter (see GradICPOdometryProvider description)
-            B2 (float or int): clifterLM control parameter (see GradICPOdometryProvider description)
-            nu (float or int): clifterLM control parameter (see GradICPOdometryProvider description)
+            B (float or int): gradLM falloff control parameter (see GradICPOdometryProvider description)
+            B2 (float or int): gradLM control parameter (see GradICPOdometryProvider description)
+            nu (float or int): gradLM control parameter (see GradICPOdometryProvider description)
+
         """
         self.numiters = numiters
         self.damp = damp
@@ -57,15 +61,19 @@ class GradICPOdometryProvider(OdometryProvider):
     ) -> torch.Tensor:
         r"""Uses gradICP to compute the relative homogenous transformation that, when applied to `frames_pointclouds`,
         would cause the points to align with points of `maps_pointclouds`.
+
         Args:
             maps_pointclouds (clifter_slam.Pointclouds): Object containing batch of map pointclouds of batch size
                 :math:`(B)`
             frames_pointclouds (clifter_slam.Pointclouds): Object containing batch of live frame pointclouds of batch size
                 :math:`(B)`
+
         Returns:
             torch.Tensor: The relative transformation that would align `maps_pointclouds` with `frames_pointclouds`
+
         Shape:
             - Output: :math:`(B, 1, 4, 4)`
+
         """
         if not isinstance(maps_pointclouds, Pointclouds):
             raise TypeError(

@@ -16,6 +16,7 @@ __all__ = ["PointFusion"]
 class PointFusion(ICPSLAM):
     r"""Point-based Fusion (PointFusion for short) SLAM for batched sequences of RGB-D images
     (See Point-based Fusion `paper <http://reality.cs.ucl.ac.uk/projects/kinect/keller13realtime.pdf>`__).
+
     Args:
         odom (str): Odometry method to be used from {'gt', 'icp', 'gradicp'}. Default: 'gradicp'
         dist_th (float or int): Distance threshold.
@@ -39,7 +40,10 @@ class PointFusion(ICPSLAM):
             Only used if `odom` is 'gradicp'.
         device (torch.device or str or None): The desired device of internal tensors. If None, sets device to be
             the CPU. Default: None
+
+
     Examples::
+
     >>> rgbdimages = RGBDImages(colors, depths, intrinsics, poses)
     >>> slam = PointFusion(odom='gt')
     >>> pointclouds, poses = slam(rgbdimages)

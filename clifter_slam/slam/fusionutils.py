@@ -22,14 +22,17 @@ def get_alpha(
 ) -> torch.Tensor:
     r"""Computes sample confidence alpha.
     (See section 4.1 of Point-based Fusion paper: http://reality.cs.ucl.ac.uk/projects/kinect/keller13realtime.pdf )
+
     Args:
         points (torch.Tensor): Tensor of points.
         sigma (torch.Tensor or float or int): Standard deviation of the Gaussian. Original paper uses 0.6 emperically.
         dim (int): Dimension along which :math:`(X, Y, Z)` of points is stored. Default: -1
         keepdim (bool): Whether the output tensor has `dim` retained or not. Default: False
         eps (float): Minimum value for alpha (to avoid numerical instability). Default: 1e-7
+
     Returns:
         alpha (torch.Tensor): Sample confidence.
+
     Shape:
         - points: :math:`(*, 3, *)`
         - sigma: Scalar
@@ -78,13 +81,16 @@ def are_points_close(
 ) -> torch.Tensor:
     r"""Returns bool tensor indicating the euclidean distance between two tensors of vertices along given dimension
     `dim` is smaller than the given threshold value `dist_th`.
+
     Args:
         tensor1 (torch.Tensor): Input to compute distance on. `dim` must be of length 3 :math:`(X, Y, Z)`.
         tensor2 (torch.Tensor): Input to compute distance on. `dim` must be of length 3 :math:`(X, Y, Z)`.
         dist_th (float or int): Distance threshold.
         dim (int): The dimension to compute distance along. Default: -1
+
     Returns:
         Output (torch.Tensor): Tensor of bool
+
     Shape:
         - tensor1: :math:`(*, 3, *)`
         - tensor2: :math:`(*, 3, *)`
@@ -132,13 +138,16 @@ def are_normals_similar(
 ) -> torch.Tensor:
     r"""Returns bool tensor indicating dot product of two tensors containing normals along given dimension `dim` is
     greater than the given threshold value `dot_th`.
+
     Args:
         tensor1 (torch.Tensor): Input to compute dot product on. `dim` must be of length 3 :math:`(N_x, N_y, N_z)`.
         tensor2 (torch.Tensor): Input to compute dot product on. `dim` must be of length 3 :math:`(N_x, N_y, N_z)`.
         dot_th (float or int): Dot product threshold.
         dim (int): The dimension to compute product along. Default: -1
+
     Returns:
         Output (torch.Tensor): Tensor of bool
+
     Shape:
         - tensor1: :math:`(*, 3, *)`
         - tensor2: :math:`(*, 3, *)`
@@ -191,15 +200,19 @@ def find_active_map_points(
 ) -> torch.Tensor:
     r"""Returns lookup table for indices of active global map points and their position inside the live frames.
     (See section 4.1 of Point-based Fusion paper: http://reality.cs.ucl.ac.uk/projects/kinect/keller13realtime.pdf )
+
     Args:
         pointclouds (clifter_slam.Pointclouds): Batch of `B` global maps
         rgbdimages (clifter_slam.RGBDImages): Batch of `B` live frames from the latest sequence. `poses`, `intrinsics`,
             heights and widths of frames are used.
+
     Returns:
         pc2im_bnhw (torch.Tensor): Active map points lookup table. Each row contains batch index `b`, point index (in
             pointclouds) `n`, and height and width index after projection to live frame `h` and `w` respectively.
+
     Shape:
         - pc2im_bnhw: :math:`(\text{num_active_map_points}, 4)`
+
     """
     if not isinstance(pointclouds, Pointclouds):
         raise TypeError(
@@ -284,6 +297,7 @@ def find_similar_map_points(
     r"""Returns lookup table for points from global maps that are close and have similar normals to points from live
     frames occupying the same pixel as their projection (onto that live frame).
     (See section 4.1 of Point-based Fusion paper: http://reality.cs.ucl.ac.uk/projects/kinect/keller13realtime.pdf )
+
     Args:
         pointclouds (clifter_slam.Pointclouds): Pointclouds of globalmaps
         rgbdimages (clifter_slam.RGBDImages): Live frames from the latest sequence
@@ -291,10 +305,12 @@ def find_similar_map_points(
             pointclouds) `n`, and height and width index after projection to live frame `h` and `w` respectively.
         dist_th (float or int): Distance threshold.
         dot_th (float or int): Dot product threshold.
+
     Returns:
         pc2im_bnhw_similar (torch.Tensor): Lookup table of points from global map that are close and have have normals
             that are similar to the live frame points.
         is_similar_mask (torch.Tensor): bool mask indicating which rows from input `pc2im_bnhw` are retained.
+
     Shape:
         - pc2im_bnhw: :math:`(\text{num_active_map_points}, 4)`
         - dist_th: Scalar
@@ -303,6 +319,7 @@ def find_similar_map_points(
             :math:`\text{num_similar_map_points}\leq\text{num_active_map_points}`
         - is_similar_mask: :math:`(\text{num_active_map_points})` where
             :math:`\text{num_similar_map_points}\leq\text{num_active_map_points}
+
     """
     if not isinstance(pointclouds, Pointclouds):
         raise TypeError(
@@ -402,19 +419,23 @@ def find_best_unique_correspondences(
     r"""Amongst global map points which project to the same frame pixel, find the ones which have the highest
     confidence counter (and if confidence counter is equal then find the closest one to viewing ray).
     (See section 4.1 of Point-based Fusion paper: http://reality.cs.ucl.ac.uk/projects/kinect/keller13realtime.pdf )
+
     Args:
         pointclouds (clifter_slam.Pointclouds): Pointclouds of globalmaps
         rgbdimages (clifter_slam.RGBDImages): Live frames from the latest sequence
         pc2im_bnhw (torch.Tensor): Similar map points lookup table. Each row contains batch index `b`, point index (in
             pointclouds) `n`, and height and width index after projection to live frame `h` and `w` respectively. This
             table can have different points (`b`s and `n`s) projecting to the same live frame pixel (same `h` and `w`)
+
     Returns:
         pc2im_bnhw_unique (torch.Tensor): Lookup table of one-to-one correspondences between points from the global map
             and live frames' points (pixels).
+
     Shape:
         - pc2im_bnhw: :math:`(\text{num_similar_map_points}, 4)`
         - pc2im_bnhw_unique: :math:`(\text{num_unique_correspondences}, 4)` where
             :math:`\text{num_unique_correspondences}\leq\text{num_similar_map_points}`
+
     """
     if not isinstance(pointclouds, Pointclouds):
         raise TypeError(
@@ -533,16 +554,20 @@ def find_correspondences(
 ) -> torch.Tensor:
     r"""Returns a lookup table for inferring unique correspondences between points from the live frame and the global
     map (See section 4.1 of Point-based Fusion paper: http://reality.cs.ucl.ac.uk/projects/kinect/keller13realtime.pdf )
+
     Args:
         pointclouds (clifter_slam.Pointclouds): Pointclouds of global maps
         rgbdimages (clifter_slam.RGBDImages): Live frames from the latest sequence
         dist_th (float or int): Distance threshold.
         dot_th (float or int): Dot product threshold.
+
     Returns:
         pc2im_bnhw (torch.Tensor): Unique correspondence lookup table. Each row contains batch index `b`, point index
             (in pointclouds) `n`, and height and width index after projection to live frame `h` and `w` respectively.
+
     Shape:
         - pc2im_bnhw: :math:`(\text{num_unique_correspondences}, 4)`
+
     """
     pc2im_bnhw = find_active_map_points(pointclouds, rgbdimages)
     pc2im_bnhw, _ = find_similar_map_points(
@@ -561,6 +586,7 @@ def fuse_with_map(
 ) -> Pointclouds:
     r"""Fuses points from live frames with global maps by merging corresponding points and appending new points.
     (See section 4.2 of Point-based Fusion paper: http://reality.cs.ucl.ac.uk/projects/kinect/keller13realtime.pdf )
+
     Args:
         pointclouds (clifter_slam.Pointclouds): Pointclouds of global maps. Must have points, colors, normals and features
             (ccounts).
@@ -569,11 +595,14 @@ def fuse_with_map(
             (in pointclouds) `n`, and height and width index after projection to live frame `h` and `w` respectively.
         sigma (torch.Tensor or float or int): Standard deviation of the Gaussian. Original paper uses 0.6 emperically.
         inplace (bool): Can optionally update the pointclouds in-place. Default: False
+
     Returns:
         pointclouds (clifter_slam.Pointclouds): Updated Pointclouds object containing global maps.
+
     Shape:
         - pc2im_bnhw: :math:`(\text{num_unique_correspondences}, 4)`
         - sigma: Scalar
+
     """
     if not isinstance(pointclouds, Pointclouds):
         raise TypeError(
@@ -699,13 +728,16 @@ def update_map_aggregate(
     inplace: bool = False,
 ) -> Pointclouds:
     r"""Aggregate points from live frames with global maps by appending the live frame points.
+
     Args:
         pointclouds (clifter_slam.Pointclouds): Pointclouds of global maps. Must have points, colors, normals and features
             (ccounts).
         rgbdimages (clifter_slam.RGBDImages): Live frames from the latest sequence
         inplace (bool): Can optionally update the pointclouds in-place. Default: False
+
     Returns:
         clifter_slam.Pointclouds: Updated Pointclouds object containing global maps.
+
     """
     if not isinstance(pointclouds, Pointclouds):
         raise TypeError(
@@ -736,6 +768,7 @@ def update_map_fusion(
 ) -> Pointclouds:
     r"""Updates pointclouds in-place given the live frame RGB-D images using PointFusion.
     (See Point-based Fusion `paper <http://reality.cs.ucl.ac.uk/projects/kinect/keller13realtime.pdf>`__).
+
     Args:
         pointclouds (clifter_slam.Pointclouds): Pointclouds of global maps. Must have points, colors, normals and features
             (ccounts).
@@ -744,8 +777,10 @@ def update_map_fusion(
         dot_th (float or int): Dot product threshold.
         sigma (torch.Tensor or float or int): Standard deviation of the Gaussian. Original paper uses 0.6 emperically.
         inplace (bool): Can optionally update the pointclouds in-place. Default: False
+
     Returns:
         clifter_slam.Pointclouds: Updated Pointclouds object containing global maps.
+
     """
     batch_size, seq_len, height, width = rgbdimages.shape
     pc2im_bnhw = find_correspondences(pointclouds, rgbdimages, dist_th, dot_th)
