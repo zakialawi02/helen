@@ -1,4 +1,3 @@
-torch
 PyYAML
 chamferdist==1.0.0
 kornia
