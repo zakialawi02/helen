@@ -18,7 +18,6 @@ __all__ = [
 
 def normalize_image(rgb: Union[torch.Tensor, np.ndarray]):
     r"""Normalizes RGB image values from :math:`[0, 255]` range to :math:`[0, 1]` range.
-
     Args:
         rgb (torch.Tensor or numpy.ndarray): RGB image in range :math:`[0, 255]`
 
@@ -46,6 +45,7 @@ def channels_first(rgb: Union[torch.Tensor, np.ndarray]):
 
     Returns:
         torch.Tensor or numpy.ndarray: :math:`(*, C, H, W)` ordering
+
 
     Shape:
         - rgb: :math:`(*, H, W, C)`
@@ -91,7 +91,6 @@ def scale_intrinsics(
     Shape:
         - intrinsics: :math:`(*, 3, 3)` or :math:`(*, 4, 4)`
         - Output: Matches `intrinsics` shape, :math:`(*, 3, 3)` or :math:`(*, 4, 4)`
-
     """
     if isinstance(intrinsics, np.ndarray):
         scaled_intrinsics = intrinsics.astype(np.float32).copy()

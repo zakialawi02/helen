@@ -25,7 +25,6 @@ def solve_linear_system(
     r"""Solves the normal equations of a linear system Ax = b, given the constraint matrix A and the coefficient vector
     b. Note that this solves the normal equations, not the linear system. That is, solves :math:`A^T A x = A^T b`,
     not :math:`Ax = b`.
-
     Args:
         A (torch.Tensor): The constraint matrix of the linear system.
         b (torch.Tensor): The coefficient vector of the linear system.
@@ -37,7 +36,6 @@ def solve_linear_system(
 
     Returns:
         torch.Tensor: Solution vector of the normal equations of the linear system
-
     Shape:
         - A: :math:`(\text{num_of_equations}, \text{num_of_variables})`
         - b: :math:`(\text{num_of_equations}, 1)`
@@ -113,7 +111,6 @@ def gauss_newton_solve(
         - b (torch.Tensor): linear system residual
         - chamfer_indices (torch.Tensor): Index of the closest point in `tgt_pc` for each point in `src_pc`
             that was not filtered out.
-
     Shape:
         - src_pc: :math:`(1, N_s, 3)`
         - tgt_pc: :math:`(1, N_t, 3)`
@@ -243,7 +240,6 @@ def point_to_plane_ICP(
 ):
     r"""Computes a rigid transformation between `tgt_pc` (target pointcloud) and `src_pc` (source pointcloud) using a
     point-to-plane error metric and the LM (Levenberg–Marquardt) solver.
-
     Args:
         src_pc (torch.Tensor): Source pointcloud (the pointcloud that needs warping).
         tgt_pc (torch.Tensor): Target pointcloud (the pointcloud to which the source pointcloud must be warped to).
@@ -254,7 +250,6 @@ def point_to_plane_ICP(
         damp (float): Damping coefficient for nonlinear least-squares. Default: 1e-8
         dist_thresh (float or int or None): Distance threshold for removing `src_pc` points distant from `tgt_pc`.
             Default: None
-
     Returns:
         tuple: tuple containing:
 
@@ -269,7 +264,6 @@ def point_to_plane_ICP(
         - initial_transform: :math:`(4, 4)`
         - transform: :math:`(4, 4)`
         - chamfer_indices: :math:`(1, N_sf)` where :math:`N_sf \leq N_s`
-
     """
     if not torch.is_tensor(src_pc):
         raise TypeError(
@@ -382,14 +376,13 @@ def point_to_plane_gradICP(
 ):
     r"""Computes a rigid transformation between `tgt_pc` (target pointcloud) and `src_pc` (source pointcloud) using a
     point-to-plane error metric and gradLM (:math:`\nabla LM`) solver (See gradLM section of 
-    `the clifter_slam paper <https://arxiv.org/abs/1910.10672>`__).  The iterate and damping coefficient are updated by:
+    `the clifter_slam paper <clifter_slampaper.pdf>`__).  The iterate and damping coefficient are updated by
 
     .. math::
 
         lambda_1 = Q_\lambda(r_0, r_1) & = \lambda_{min} + \frac{\lambda_{max} -
         \lambda_{min}}{1 + e^{-B (r_1 - r_0)}} \\
         Q_x(r_0, r_1) & = x_0 + \frac{\delta x_0}{\sqrt[nu]{1 + e^{-B2*(r_1 - r_0)}}}`
-
     Args:
         src_pc (torch.Tensor): Source pointcloud (the pointcloud that needs warping).
         tgt_pc (torch.Tensor): Target pointcloud (the pointcloud to which the source pointcloud must be warped to).
@@ -405,14 +398,12 @@ def point_to_plane_gradICP(
         B (float or int): gradLM falloff control parameter
         B2 (float or int): gradLM control parameter
         nu (float or int): gradLM control parameter
-
     Returns:
         tuple: tuple containing:
 
         - transform (torch.Tensor): linear system residual
         - chamfer_indices (torch.Tensor): Index of the closest point in `tgt_pc` for each point in `src_pc` that was not
           filtered out.
-
     Shape:
         - src_pc: :math:`(1, N_s, 3)`
         - tgt_pc: :math:`(1, N_t, 3)`
@@ -420,7 +411,6 @@ def point_to_plane_gradICP(
         - initial_transform: :math:`(4, 4)`
         - transform: :math:`(4, 4)`
         - chamfer_indices: :math:`(1, N_sf)` where :math:`N_sf \leq N_s`
-
     """
     if not torch.is_tensor(src_pc):
         raise TypeError(
@@ -550,20 +540,17 @@ def downsample_pointclouds(
 ) -> Pointclouds:
     r"""Downsamples active points of pointclouds (points that project inside the live frame) and removes non-active
     points.
-
     Args:
         pointclouds (clifter_slam.Pointclouds): Pointclouds to downsample
         pc2im_bnhw (torch.Tensor): Active map points lookup table. Each row contains batch index `b`, point
             index (in pointclouds) `n`, and height and width index after projection to live frame `h` and `w`
             respectively.
         ds_ratio (int): Downsampling ratio
-
     Returns:
         clifter_slam.Pointclouds: Downsampled pointclouds
 
     Shape:
         - pc2im_bnhw: :math:`(\text{num_active_map_points}, 4)`
-
     """
     if not isinstance(pointclouds, Pointclouds):
         raise TypeError(
@@ -622,14 +609,12 @@ def downsample_pointclouds(
 
 def downsample_rgbdimages(rgbdimages: RGBDImages, ds_ratio: int) -> Pointclouds:
     r"""Downsamples points and normals of RGBDImages and returns a clifter_slam.Pointclouds object
-
     Args:
         rgbdimages (clifter_slam.RGBDImages): RGBDImages to downsample
         ds_ratio (int): Downsampling ratio
 
     Returns:
         clifter_slam.Pointclouds: Downsampled points and normals
-
     """
     if not isinstance(rgbdimages, RGBDImages):
         raise TypeError(
