@@ -15,5 +15,5 @@ class OdometryProvider(ABC):
 
     @abstractmethod
     def provide(self, *args, **kwargs):
-        r"""Defines the odometry computation performed at every `.provide()` call. """
+        r"""Defines the odometry computation performed at every `.provide()` call."""
         raise NotImplementedError

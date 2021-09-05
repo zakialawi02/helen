@@ -18,14 +18,13 @@ CLASSIFIERS = [
     "Intended Audience :: Education",
     "Intended Audience :: Science/Research",
     "Operating System :: POSIX :: Linux",
-    
     "Programming Language :: Python :: 3 :: Only",
     "License :: OSI Approved :: MIT",
-    "Topic :: Software Development :: Libraries"
+    "Topic :: Software Development :: Libraries",
 ]
 
 logger = logging.getLogger()
-logging.basicConfig(format = "%(levelname)s - %(message)s")
+logging.basicConfig(format="%(levelname)s - %(message)s")
 
 
 def get_requirements():
@@ -34,30 +33,31 @@ def get_requirements():
         packages = file.read().splitlines()
     return packages
 
+
 if __name__ == "__main__":
     setup(
-        name = PACKAGE_NAME,
-        version = VERSION,
-        author = AUTHOR,
-        description = DESCRIPTION,
-        url = URL,
-        long_description = LONG_DESCRIPTION,
-        license = LICENSE,
-        python_requires = ">3.6",
-        packages = find_packages(exclude = ("test", "example")),
-        install_requires = get_requirements(),
-        extras_require = {
-            "all" : ["matplot", "tqdm"],
-            "dev" : [
+        name=PACKAGE_NAME,
+        version=VERSION,
+        author=AUTHOR,
+        description=DESCRIPTION,
+        url=URL,
+        long_description=LONG_DESCRIPTION,
+        license=LICENSE,
+        python_requires=">3.6",
+        packages=find_packages(exclude=("test", "example")),
+        install_requires=get_requirements(),
+        extras_require={
+            "all": ["matplot", "tqdm"],
+            "dev": [
                 "black",
                 "flake8",
                 "nbsphinx",
                 "pytest>=4.6",
                 "pytest-cov>=2.7",
-                "sphinx==2.2.0 "
+                "sphinx==2.2.0 ",
             ],
         },
-        zip_safe = True,
-        include_dirs = [],
-        classifiers = CLASSIFIERS,
+        zip_safe=True,
+        include_dirs=[],
+        classifiers=CLASSIFIERS,
     )

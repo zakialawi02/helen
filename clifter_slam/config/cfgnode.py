@@ -236,15 +236,15 @@ class CfgNode(dict):
             d[subkey] = value
 
     def freeze(self):
-        r"""Make this `CfgNode` and all of its children immutable. """
+        r"""Make this `CfgNode` and all of its children immutable."""
         self._immutable(True)
 
     def defrost(self):
-        r"""Make this `CfgNode` and all of its children mutable. """
+        r"""Make this `CfgNode` and all of its children mutable."""
         self._immutable(False)
 
     def is_frozen(self):
-        r"""Return mutability. """
+        r"""Return mutability."""
         return self.__dict__[CfgNode.IMMUTABLE]
 
     def _immutable(self, is_immutable: bool):
@@ -264,7 +264,7 @@ class CfgNode(dict):
                 v._immutable(is_immutable)
 
     def clone(self):
-        r"""Recursively copy this `CfgNode`. """
+        r"""Recursively copy this `CfgNode`."""
         return copy.deepcopy(self)
 
     def register_deprecated_key(self, key: str):
@@ -295,14 +295,14 @@ class CfgNode(dict):
         self.__dict__[CfgNode.RENAMED_KEYS][old_name] = value
 
     def key_is_deprecated(self, full_key: str):
-        r"""Test if a key is deprecated. """
+        r"""Test if a key is deprecated."""
         if full_key in self.__dict__[CfgNode.DEPRECATED_KEYS]:
             logger.warning("deprecated config key (ignoring): {}".format(full_key))
             return True
         return False
 
     def key_is_renamed(self, full_key: str):
-        r"""Test if a key is renamed. """
+        r"""Test if a key is renamed."""
         return full_key in self.__dict__[CfgNode.RENAMED_KEYS]
 
     def raise_key_rename_error(self, full_key: str):
@@ -347,7 +347,7 @@ class CfgNode(dict):
 
     @classmethod
     def _load_cfg_from_file(cls, file_obj):
-        r"""Load a config from a YAML file or a Python source file. """
+        r"""Load a config from a YAML file or a Python source file."""
         _, file_ext = os.path.splitext(file_obj.name)
         if file_ext in _YAML_EXTS:
             return cls._load_cfg_from_yaml_str(file_obj.read())
@@ -362,13 +362,13 @@ class CfgNode(dict):
 
     @classmethod
     def _load_cfg_from_yaml_str(cls, str_obj):
-        r"""Load a config from a YAML string encoding. """
+        r"""Load a config from a YAML string encoding."""
         cfg_as_dict = yaml.safe_load(str_obj)
         return cls(cfg_as_dict)
 
     @classmethod
     def _load_cfg_py_source(cls, filename):
-        r"""Load a config from a Python source file. """
+        r"""Load a config from a Python source file."""
         module = _load_module_from_file("yacs.config.override", filename)
         _assert_with_logging(
             hasattr(module, "cfg"),
