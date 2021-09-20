@@ -1,6 +1,7 @@
 # clifter slam
 ![license](https://img.shields.io/github/license/slowy07/clifter_slam?style=for-the-badge)
 ![repo_size](https://img.shields.io/github/repo-size/slowy07/clifter_slam?style=for-the-badge)
+![pythonTesting](https://img.shields.io/github/workflow/status/slowy07/clifter_slam/PythonTesting?style=for-the-badge)
 
 clifter slam is a fully differentiable dense SLAM framework. It provides a repository of differentiable building blocks for a dense SLAM system, such as differentiable nonlienar least squares solvers, differentiable ICP (iterative closest point) techniques, differentiable raycastring modules, and differentiable mapping / fusion blocks. One can use these blocks to construct SLAM systems that allow gradients to flow all the way from the outputs of the system (map, trajectory) to the inputs (raw color / depth images, parameters, calibration)
 
