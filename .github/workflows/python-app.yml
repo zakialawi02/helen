@@ -20,6 +20,23 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: 3.9
+    - name: install black
+      run: |
+        pip install black
+    - name: automation format
+      run: black .
+    - name: git check modification
+      id: git-check
+      run: echo ::set-ouput name=modified::$(if git diff-index --quiet HEAD --; then echo "no"; else echo "yes"; fi)
+    - name: push changes
+      if: steps.git-check.outputs.modified == 'yes' && github.event_name == 'push'
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
+        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+        git pull
+        git commi -am "style: refactor code"
+        git push
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
@@ -28,3 +45,4 @@ jobs:
       run: |
         # stop the build if there are Python syntax errors or undefined names
         flake8 . --count --show-source --statistics
+  
