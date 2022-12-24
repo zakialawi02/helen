@@ -2,9 +2,33 @@
 select = B,C,E,F,P,T4,W,B9
 max-line-length = 120
 ignore = 
-    E203,E305,402,E501,E721,E741,F403,F405,F821,F841,F999,W503,W504,C408,E302,W291,E303,
-    b007,b008,F401
-    C400,C401,C402,C403,C404,C405,C406,C411
+    E203,
+    E305,
+    E501,
+    E721,
+    E741,
+    F403,
+    F405,
+    F821,
+    F841,
+    F999,
+    W503,
+    W504,
+    C408,
+    E302,
+    W291,
+    E303,
+    b007,
+    b008,
+    F401
+    C400,
+    C401,
+    C402,
+    C403,
+    C404,
+    C405,
+    C406,
+    C411
 per-file-ignores=
     __init__.py:F401
 exclude = .git, test/, build/,cuda,
