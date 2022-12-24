@@ -26,3 +26,11 @@ in BA-Net, the authors learn to predict the damping coefficient of the levenberg
 ![graph_node](image_data/computational.png)
 nodes in red represent variables, nodes in blue reresents operations on variables. Edges represent adata flow. this graph computes the function 3(xy + z).
 dashed lines indicate (loca, i.e, per-node) gredients in the backward pass.
+
+## installation
+
+install from github as pip package
+```
+pip install git+https://github.com/slowy/helen
+```
+

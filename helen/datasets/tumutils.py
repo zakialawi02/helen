@@ -44,6 +44,7 @@ This script contains helpers for reading the time stamps from e.g. the "rgb.txt"
 and joining them by finding the best matches.
 """
 from typing import Optional
+import sys
 
 import numpy as np
 import warnings

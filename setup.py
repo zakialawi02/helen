@@ -3,9 +3,9 @@ import logging
 
 from setuptools import _install_setup_requires, setup, find_packages
 
-PACKAGE_NAME = "clifter-slam"
-VERSION = runpy.run_path("clifter_slam/version.py")["__version__"]
-DESCRIPTION = "ClifterSlam: Dense Slam mmets automatic differentation"
+PACKAGE_NAME = "helen"
+VERSION = runpy.run_path("helen/version.py")["__version__"]
+DESCRIPTION = "Helen: Dense Slam mmets automatic differentation"
 URL = "< url.to.go.in.here>"
 AUTHOR = "ArfySlowy"
 LICENSE = "MIT"
