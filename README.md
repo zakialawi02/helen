@@ -1,14 +1,22 @@
-# clifter slam
+# Helen
 ![license](https://img.shields.io/github/license/slowy07/clifter_slam?style=for-the-badge)
-![repo_size](https://img.shields.io/github/repo-size/slowy07/clifter_slam?style=for-the-badge)
-![pythonTesting](https://img.shields.io/github/workflow/status/slowy07/clifter_slam/PythonTesting?style=for-the-badge)
 
-![pointfusiondemotesting](.github/pointfusiondemo.gif)
+Helen is a fully differentiable dense SLAM framework. It provides a repository of differentiable building blocks for a dense SLAM system, such as differentiable nonlienar least squares solvers, differentiable ICP (iterative closest point) techniques, differentiable raycastring modules, and differentiable mapping / fusion blocks. One can use these blocks to construct SLAM systems that allow gradients to flow all the way from the outputs of the system (map, trajectory) to the inputs (raw color / depth images, parameters, calibration)
 
-clifter slam is a fully differentiable dense SLAM framework. It provides a repository of differentiable building blocks for a dense SLAM system, such as differentiable nonlienar least squares solvers, differentiable ICP (iterative closest point) techniques, differentiable raycastring modules, and differentiable mapping / fusion blocks. One can use these blocks to construct SLAM systems that allow gradients to flow all the way from the outputs of the system (map, trajectory) to the inputs (raw color / depth images, parameters, calibration)
+## information about SLAM
+
+SLAM is technological mapping method that allows robots and other autonomous
+vehicles to build a map and localize itself on that map at the same time.
+using a wide range of algorithm, computation and other sensory data, SLAM software
+system allow a robot or other vehicle like a drone or self-driving-car to ploat a
+course through an unfamiliar environment while simultaneously identifying its own location
+within that environment
 
 ## documentation
 - [online documentation](https://slowy07.github.io/clifter_slam)
+
+## online demo test
+[point clouds living room](https://colab.research.google.com/drive/1QQQQ7XDop8JLL7uMeZ3FSCy6OhNk7CW0?usp=sharing)
 
 
 ## differentiable visual odometry
@@ -27,10 +35,28 @@ in BA-Net, the authors learn to predict the damping coefficient of the levenberg
 nodes in red represent variables, nodes in blue reresents operations on variables. Edges represent adata flow. this graph computes the function 3(xy + z).
 dashed lines indicate (loca, i.e, per-node) gredients in the backward pass.
 
-## installation
+## installation and requirements
+
+for the requirements you can see on [requirements.txt](requirements.txt)
 
 install from github as pip package
 ```
 pip install git+https://github.com/slowy/helen
 ```
 
+to verify ``helen`` has success been built, test on python interperter and check by
+```python
+import helen as helen_slam
+print(helen_slam.__version__)
+```
+
+## output
+
+![pointfusiondemotesting](.github/pointfusiondemo.gif)
+
+```python
+rgbd_images = RGBDimages(color, depths, intrunsics)
+slam = PointFusion()
+pointclouds, recorvered_poses = slam(rgbd_images)
+pointclouds.poltly(0).show()
+```
