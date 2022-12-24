@@ -11,7 +11,7 @@ system allow a robot or other vehicle like a drone or self-driving-car to ploat 
 course through an unfamiliar environment while simultaneously identifying its own location
 within that environment
 
-## documentation
+## documentation (online documentation work in progress)
 - [online documentation](https://slowy07.github.io/clifter_slam)
 
 ## online demo test
