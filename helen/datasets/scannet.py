@@ -77,6 +77,7 @@ class Scannet(data.Dataset):
         return_depth: bool = True,
         return_intrinsics: bool = True,
         return_pose: bool = True,
+        absolute_pose: bool = True,
         return_transform: bool = True,
         return_names: bool = True,
         return_labels: bool = True,
@@ -95,6 +96,7 @@ class Scannet(data.Dataset):
         self.return_depth = return_depth
         self.return_intrinsics = return_intrinsics
         self.return_pose = return_pose
+        self.absolute_pose = absolute_pose
         self.return_transform = return_transform
         self.return_names = return_names
         self.return_labels = return_labels
@@ -268,7 +270,8 @@ class Scannet(data.Dataset):
 
         if self.return_pose:
             pose_seq = torch.stack(pose_seq, 0).float()
-            pose_seq = self._preprocess_poses(pose_seq)
+            if not self.absotule_pose:
+                pose_seq = self._preprocess_poses(pose_seq)
             output.append(pose_seq)
 
         if self.return_transform:
