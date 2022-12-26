@@ -11,11 +11,9 @@ system allow a robot or other vehicle like a drone or self-driving-car to ploat 
 course through an unfamiliar environment while simultaneously identifying its own location
 within that environment
 
-## documentation (online documentation work in progress)
-- [online documentation](https://slowy07.github.io/clifter_slam)
-
 ## online demo test
-[point clouds living room](https://colab.research.google.com/drive/1QQQQ7XDop8JLL7uMeZ3FSCy6OhNk7CW0?usp=sharing)
+- [point clouds living room](https://colab.research.google.com/drive/1QQQQ7XDop8JLL7uMeZ3FSCy6OhNk7CW0?usp=sharing)
+- [``RGBDimages living room``](https://colab.research.google.com/drive/1Mt8YlqzxEbFBwJ8yi2ALrRMsd5LPLZ4s?usp=sharing)
 
 
 ## differentiable visual odometry
