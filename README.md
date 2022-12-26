@@ -14,6 +14,8 @@ within that environment
 ## online demo test
 - [point clouds living room](https://colab.research.google.com/drive/1QQQQ7XDop8JLL7uMeZ3FSCy6OhNk7CW0?usp=sharing)
 - [``RGBDimages living room``](https://colab.research.google.com/drive/1Mt8YlqzxEbFBwJ8yi2ALrRMsd5LPLZ4s?usp=sharing)
+- [``helen pointfusion``](https://colab.research.google.com/drive/1KE3UNrjdmbuytNk9scKiVIZFx8HVdQjw?usp=sharing)
+- [``helen pointclouds``](https://colab.research.google.com/drive/16dLy4AgXIYpqbfuYFKM1rLLBZWYVotsd?usp=sharing)
 
 
 ## differentiable visual odometry
@@ -29,6 +31,7 @@ in BA-Net, the authors learn to predict the damping coefficient of the levenberg
 ## computational graphs
 
 ![graph_node](image_data/computational.png)
+
 nodes in red represent variables, nodes in blue reresents operations on variables. Edges represent adata flow. this graph computes the function 3(xy + z).
 dashed lines indicate (loca, i.e, per-node) gredients in the backward pass.
 
